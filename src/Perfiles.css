@@ -1,0 +1,57 @@
+/* Estilos para la tabla de perfiles */
+
+.profiles-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+  }
+  
+  .profiles-table thead tr {
+    background-color: #3d3d3d;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  .profiles-table th,
+  .profiles-table td {
+    padding: 12px 15px;
+    border: 1px solid #000000;
+  }
+  
+  .profiles-table button {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #ff4b5c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .profiles-table button:hover {
+    background-color: #ff1f3a;
+  }
+  
+  /* Estilos para el botón de agregar perfil */
+  
+  .button-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .add-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+  
+  .add-button:hover {
+    background-color: #45a049;
+  }

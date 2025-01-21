@@ -1,0 +1,71 @@
+/* Estilos para el formulario de perfiles */
+
+.add-perfil-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+  }
+  
+  .perfil-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .perfil-form input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .cancel-button, .create-button {
+    flex: 1;
+    margin: 0 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+  
+  .cancel-button {
+    background-color: #ff4b5c;
+  }
+  
+  .cancel-button:hover {
+    background-color: #ff1f3a;
+  }
+  
+  .create-button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 600px) {
+    .add-perfil-container {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    .button-container {
+      flex-direction: column;
+    }
+  
+    .cancel-button, .create-button {
+      margin: 5px 0;
+    }
+  }

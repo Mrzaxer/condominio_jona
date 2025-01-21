@@ -1,0 +1,48 @@
+/* Multas.css */
+/* Estilos para la tabla de multas */
+
+.multas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 18px;
+  text-align: left;
+}
+
+.multas-table thead tr {
+  background-color: #3d3d3d;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.multas-table th,
+.multas-table td {
+  padding: 12px 15px;
+  border: 1px solid #000000;
+}
+
+.multas-table tbody tr {
+  border-bottom: 1px solid #2a2727;
+}
+
+/* Estilos para el botón de agregar nueva multa */
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.add-multa-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.add-multa-button:hover {
+  background-color: #45a049;
+}

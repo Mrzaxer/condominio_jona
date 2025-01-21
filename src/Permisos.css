@@ -1,0 +1,49 @@
+/* Estilos para la tabla de permisos */
+
+.permisos-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+  }
+  
+  .permisos-table thead tr {
+    background-color: #3d3d3d;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  .permisos-table th,
+  .permisos-table td {
+    padding: 12px 15px;
+    border: 1px solid #000000;
+  }
+  
+  .permisos-table tbody tr {
+    border-bottom: 1px solid #000000;
+  }
+  
+
+  
+  /* Estilos para el botón de asignar permiso */
+  
+  .button-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .assign-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+  
+  .assign-button:hover {
+    background-color: #45a049;
+  }

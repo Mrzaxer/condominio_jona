@@ -1,0 +1,44 @@
+
+  
+  /* Tabla de pagos */
+  .pagos-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .pagos-table thead tr {
+    background-color: #3d3d3d;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .pagos-table th,
+  .pagos-table td {
+    border: 1px solid #000000;
+    padding: 8px;
+    text-align: left;
+  }
+  
+ /* Estilos para el botón de agregar nuevo pago */
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.add-payment-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.add-payment-button:hover {
+  background-color: #45a049;
+}
+  
