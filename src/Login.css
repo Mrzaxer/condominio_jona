@@ -1,9 +1,7 @@
-/* Login.css */
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: url('./imagenes/background.webp') no-repeat center center fixed;
+  background: url('./imagenes/fondo4.jpg') no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -69,4 +67,11 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
 }
