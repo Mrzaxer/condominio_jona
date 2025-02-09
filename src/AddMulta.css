@@ -55,3 +55,55 @@
   .create-button:hover {
     background-color: #45a049;
   }
+  /* Estilos para la transición del botón de carga */
+.loading-enter {
+  opacity: 0;
+}
+
+.loading-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+
+.loading-exit {
+  opacity: 1;
+}
+
+.loading-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+/* Estilos para el modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.close-button {
+  background-color: #ff4b5c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.close-button:hover {
+  background-color: #ff1f3a;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaBell } from 'react-icons/fa';
+import { CSSTransition, TransitionGroup } from 'react-transition-group'; // Importamos react-transition-group
 import './Multas.css';
 
 const HomeU = () => {
@@ -10,11 +11,10 @@ const HomeU = () => {
   const [contador, setContador] = useState(0);
   const [abierto, setAbierto] = useState(false);
   const navigate = useNavigate();
-
   const departamento = localStorage.getItem('departamento');
 
   // Obtener multas
-  useEffect(() => { 
+  useEffect(() => {
     const fetchMultas = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/multas/si');
@@ -24,7 +24,6 @@ const HomeU = () => {
         console.error('Error al obtener multas:', err);
       }
     };
-
     fetchMultas();
   }, [departamento]);
 
@@ -44,8 +43,11 @@ const HomeU = () => {
     };
 
     fetchNotificaciones();
-    const interval = setInterval(fetchNotificaciones, 5000);
+    
+    // Intervalo para actualizar las notificaciones cada 5 segundos
+    const interval = setInterval(fetchNotificaciones, 3000); // 5 segundos
 
+    // Limpiar el intervalo cuando el componente se desmonte
     return () => clearInterval(interval);
   }, [departamento]);
 
@@ -53,12 +55,8 @@ const HomeU = () => {
   const marcarComoLeidaYRedirigir = async (id, ruta) => {
     try {
       await axios.put(`http://localhost:5000/api/notificaciones/${id}/leida`);
-
-      setNotificaciones(prev => 
-        prev.map(noti => (noti._id === id ? { ...noti, leida: true } : noti))
-      );
+      setNotificaciones(prev => prev.map(noti => (noti._id === id ? { ...noti, leida: true } : noti)));
       setContador(prev => Math.max(prev - 1, 0));
-
       navigate(ruta);
     } catch (err) {
       console.error('Error al marcar como leída:', err);
@@ -104,18 +102,24 @@ const HomeU = () => {
         <div className="close-btn" onClick={toggleDropdown}>X</div>
         <h4>Notificaciones</h4>
         {notificaciones.length > 0 ? (
-          <ul>
+          <TransitionGroup component="ul" className="notification-list">
             {notificaciones.map(noti => (
-              <li key={noti._id} className={noti.leida ? 'leida' : 'nueva'}>
-                <span onClick={() => marcarComoLeidaYRedirigir(noti._id, noti.ruta)}>
-                  {noti.mensaje}
-                </span>
-                <button className="delete-btn" onClick={() => eliminarNotificacion(noti._id)}>
-                  X
-                </button>
-              </li>
+              <CSSTransition
+                key={noti._id}
+                timeout={500}
+                classNames="notification"
+              >
+                <li className={noti.leida ? 'leida' : 'nueva'}>
+                  <span onClick={() => marcarComoLeidaYRedirigir(noti._id, noti.ruta)}>
+                    {noti.mensaje}
+                  </span>
+                  <button className="delete-btn" onClick={() => eliminarNotificacion(noti._id)}>
+                    X
+                  </button>
+                </li>
+              </CSSTransition>
             ))}
-          </ul>
+          </TransitionGroup>
         ) : (
           <p>No tienes notificaciones.</p>
         )}

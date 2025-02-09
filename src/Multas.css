@@ -68,42 +68,63 @@
   font-size: 16px;
 }
 
-.notification-menu ul {
-  list-style: none;
+.notification-list {
   padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
-.notification-menu li {
-  margin: 5px 0;
-}
-
-.nueva {
-  font-weight: bold;
-}
-
-.leida {
-  color: gray;
-}
-
-/* Botón de cerrar */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  cursor: pointer;
+.notification-list li {
+  background-color: #34495e;
   color: white;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Estilos para los botones de marcar notificación como leída */
-button {
+.notification-list li.nueva {
+  border-left: 5px solid #e74c3c;
+}
+
+.notification-list li.leida {
+  border-left: 5px solid #bdc3c7;
+}
+
+.delete-btn {
   background: none;
   border: none;
-  color: #007bff;
+  color: #ecf0f1;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
 }
 
-button:hover {
-  text-decoration: underline;
+.delete-btn:hover {
+  color: #e74c3c;
 }
+
+/* Animaciones para las notificaciones */
+.notification-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 500ms, transform 500ms;
+}
+
+.notification-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 500ms, transform 500ms;
+}
+  

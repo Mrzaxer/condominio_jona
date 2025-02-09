@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { CSSTransition } from 'react-transition-group';
 import './AddMulta.css';
 
 const AddMulta = () => {
@@ -8,52 +9,52 @@ const AddMulta = () => {
     direccion: '',  // Dirección del inquilino
     motivo: '',
     monto: '',
-    estado: 'pendiente' // Estado por defecto 'pending' o el que corresponda
+    estado: 'pendiente' // Estado por defecto 'pendiente'
   });
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);  // Nuevo estado de carga
+  const [showModal, setShowModal] = useState(false);  // Controlar la visibilidad del modal
 
-  // Controlador para manejar los cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-  // Enviar la solicitud para crear la multa
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setLoading(true);  // Iniciar carga
 
     try {
-      // Hacemos la solicitud para crear la multa
       const response = await axios.post('http://localhost:5000/api/multas/no', form);
-
-      // Suponemos que el backend envía una notificación al inquilino
       setSuccess('Multa creada exitosamente. Notificación enviada.');
+      setShowModal(true);  // Mostrar el modal de éxito
 
       // Limpiar el formulario después de crear la multa
       setForm({
         direccion: '',
         motivo: '',
         monto: '',
-        estado: 'pendiente' // Reinicia el estado
+        estado: 'pendiente'
       });
     } catch (err) {
       console.error('Error al crear la multa:', err);
       const message = err.response?.data?.message || 'Ocurrió un error al crear la multa. Intenta nuevamente.';
       setError(message);
+    } finally {
+      setLoading(false);  // Terminar carga
     }
   };
 
-  // Función para cancelar el formulario
   const handleCancel = () => {
     setForm({
       direccion: '',
       motivo: '',
       monto: '',
-      estado: 'pendiente' // Reinicia el estado
+      estado: 'pendiente'
     });
     setError('');
     setSuccess('');
@@ -73,7 +74,6 @@ const AddMulta = () => {
       <div className="add-multa-container">
         <h2>Crear Nueva Multa</h2>
         <form onSubmit={handleSubmit} className="multa-form">
-          {/* Campo para dirección del inquilino */}
           <input
             type="text"
             name="direccion"
@@ -82,8 +82,6 @@ const AddMulta = () => {
             onChange={handleChange}
             required
           />
-          
-          {/* Campo para motivo */}
           <input
             type="text"
             name="motivo"
@@ -92,8 +90,6 @@ const AddMulta = () => {
             onChange={handleChange}
             required
           />
-          
-          {/* Campo para monto */}
           <input
             type="number"
             name="monto"
@@ -102,8 +98,6 @@ const AddMulta = () => {
             onChange={handleChange}
             required
           />
-          
-          {/* Campo para estado de la multa */}
           <select
             name="estado"
             value={form.estado}
@@ -112,17 +106,36 @@ const AddMulta = () => {
           >
             <option value="pendiente">Pendiente</option>
             <option value="pagado">Pagado</option>
-            
           </select>
 
-          {/* Botones para cancelar o enviar */}
           <div className="button-container">
             <button type="button" className="cancel-button" onClick={handleCancel}>
               Cancelar
             </button>
-            <button type="submit" className="create-button">
-              Crear Multa
-            </button>
+
+            {/* Transición de "Cargando" */}
+            <CSSTransition
+              in={loading}
+              timeout={300}
+              classNames="loading"
+              unmountOnExit
+            >
+              <button type="button" className="create-button" disabled>
+                Cargando...
+              </button>
+            </CSSTransition>
+
+            {/* Botón de crear multa */}
+            <CSSTransition
+              in={!loading}
+              timeout={300}
+              classNames="loading"
+              unmountOnExit
+            >
+              <button type="submit" className="create-button">
+                Crear Multa
+              </button>
+            </CSSTransition>
           </div>
         </form>
 
@@ -130,6 +143,22 @@ const AddMulta = () => {
         {success && <p className="success-message">{success}</p>}
         {error && <p className="error-message">{error}</p>}
       </div>
+
+      {/* Modal de éxito */}
+      <CSSTransition
+        in={showModal}
+        timeout={300}
+        classNames="modal"
+        unmountOnExit
+      >
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal-content">
+            <h2>Éxito</h2>
+            <p>{success}</p>
+            <button onClick={() => setShowModal(false)} className="close-button">Cerrar</button>
+          </div>
+        </div>
+      </CSSTransition>
     </>
   );
 };

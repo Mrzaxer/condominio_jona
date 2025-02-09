@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaBell } from 'react-icons/fa';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './Home.css';
 
 const HomeU = () => {
@@ -13,21 +14,29 @@ const HomeU = () => {
   const departamento = localStorage.getItem('departamento');
 
   // Obtener notificaciones
+  const fetchNotificaciones = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/notificaciones/${departamento}`);
+      const filteredNotificaciones = response.data.filter(notif => notif.departamento === departamento);
+      setNotificaciones(filteredNotificaciones);
+
+      const notificacionesNoLeidas = filteredNotificaciones.filter(noti => !noti.leida);
+      setContador(notificacionesNoLeidas.length);
+    } catch (err) {
+      console.error('Error al obtener notificaciones:', err);
+    }
+  };
+
   useEffect(() => {
-    const fetchNotificaciones = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/notificaciones/${departamento}`);
-        const filteredNotificaciones = response.data.filter(notif => notif.departamento === departamento);
-        setNotificaciones(filteredNotificaciones);
+    fetchNotificaciones(); // Cargar las notificaciones al inicio
 
-        const notificacionesNoLeidas = filteredNotificaciones.filter(noti => !noti.leida);
-        setContador(notificacionesNoLeidas.length);
-      } catch (err) {
-        console.error('Error al obtener notificaciones:', err);
-      }
-    };
+    // Configurar el intervalo para actualizar las notificaciones cada 3 segundos
+    const intervalId = setInterval(() => {
+      fetchNotificaciones();
+    }, 3000); // 3 segundos
 
-    fetchNotificaciones();
+    // Limpiar el intervalo al desmontar el componente
+    return () => clearInterval(intervalId);
   }, [departamento]);
 
   // Marcar como leída y redirigir
@@ -84,16 +93,24 @@ const HomeU = () => {
         <div className="close-btn" onClick={toggleDropdown}>X</div>
         <h4>Notificaciones</h4>
         {notificaciones.length > 0 ? (
-          <ul>
+          <TransitionGroup component="ul" className="notification-list">
             {notificaciones.map(noti => (
-              <li key={noti._id} className={noti.leida ? 'leida' : 'nueva'} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span onClick={() => manejarClickNotificacion(noti._id, '/multasu')}>
-                  {noti.mensaje}
-                </span>
-                <button onClick={() => eliminarNotificacion(noti._id)} style={{ background: 'red', color: 'white', border: 'none', padding: '5px', cursor: 'pointer' }}>X</button>
-              </li>
+              <CSSTransition
+                key={noti._id}
+                timeout={500}
+                classNames="notification"
+              >
+                <li className={noti.leida ? 'leida' : 'nueva'}>
+                  <span onClick={() => manejarClickNotificacion(noti._id, '/multasu')}>
+                    {noti.mensaje}
+                  </span>
+                  <button className="delete-btn" onClick={() => eliminarNotificacion(noti._id)}>
+                    X
+                  </button>
+                </li>
+              </CSSTransition>
             ))}
-          </ul>
+          </TransitionGroup>
         ) : (
           <p>No tienes notificaciones.</p>
         )}

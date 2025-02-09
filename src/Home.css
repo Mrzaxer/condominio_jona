@@ -40,17 +40,6 @@ body {
   text-decoration: underline;
 }
 
-/* Contenido principal */
-.main-content {
-  padding: 20px;
-  color: white;
-}
-
-h2 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
 /* Caja de notificaciones */
 .notifications-box {
   background-color: rgba(192, 192, 192, 0.8); /* Fondo semitransparente */
@@ -89,4 +78,88 @@ h2 {
 
 .logout-button:hover {
   background-color: #ff1f3a;
+}
+
+/* Estilos para el menú de notificaciones deslizante */
+.notification-menu {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Empieza completamente fuera de la pantalla */
+  width: 300px;
+  height: 100%;
+  background-color: #2c3e50;
+  color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease; /* Transición suave para el deslizamiento */
+  padding: 20px;
+  z-index: 1000;
+}
+
+.notification-menu.open {
+  right: 0; /* Cuando está abierto, se desplaza a la pantalla */
+}
+
+.notification-menu h4 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.notification-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.notification-list li {
+  background-color: #34495e;
+  color: white;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-list li.nueva {
+  border-left: 5px solid #e74c3c;
+}
+
+.notification-list li.leida {
+  border-left: 5px solid #bdc3c7;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ecf0f1;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  color: #e74c3c;
+}
+
+/* Animaciones para las notificaciones */
+.notification-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 500ms, transform 500ms;
+}
+
+.notification-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 500ms, transform 500ms;
 }
