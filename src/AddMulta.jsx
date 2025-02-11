@@ -29,7 +29,7 @@ const AddMulta = () => {
     setLoading(true);  // Iniciar carga
 
     try {
-      const response = await axios.post('http://localhost:5000/api/multas/no', form);
+      const response = await axios.post('https://api-mongo-5hdo.onrender.com/api/multas/no', form);
       setSuccess('Multa creada exitosamente. Notificación enviada.');
       setShowModal(true);  // Mostrar el modal de éxito
 

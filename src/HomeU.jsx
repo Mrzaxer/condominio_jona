@@ -42,7 +42,7 @@ const HomeU = () => {
   // Marcar como leída y redirigir
   const manejarClickNotificacion = async (id, ruta) => {
     try {
-      await axios.put(`http://localhost:5000/api/notificaciones/${id}/leida`);
+      await axios.put(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}/leida`);
       setNotificaciones(prev =>
         prev.map(noti => (noti._id === id ? { ...noti, leida: true } : noti))
       );
@@ -56,7 +56,7 @@ const HomeU = () => {
   // Eliminar notificación
   const eliminarNotificacion = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/notificaciones/${id}`);
+      await axios.delete(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}`);
       setNotificaciones(prev => prev.filter(noti => noti._id !== id));
       setContador(prev => Math.max(prev - 1, 0));
     } catch (err) {

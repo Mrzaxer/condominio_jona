@@ -11,7 +11,7 @@ const Multas = () => {
   useEffect(() => {
     const fetchMultas = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/multas/si'); // Cambia esta URL según tu backend
+        const response = await axios.get('https://api-mongo-5hdo.onrender.com/api/multas/si'); // Cambia esta URL según tu backend
         setMultas(response.data); // Almacena las multas en el estado
       } catch (err) {
         console.error('Error al obtener las multas:', err);

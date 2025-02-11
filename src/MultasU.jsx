@@ -17,7 +17,7 @@ const HomeU = () => {
   useEffect(() => {
     const fetchMultas = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/multas/si');
+        const response = await axios.get('https://api-mongo-5hdo.onrender.com/api/multas/si');
         const filteredMultas = response.data.filter(multa => multa.direccion.includes(departamento));
         setMultas(filteredMultas);
       } catch (err) {
@@ -31,7 +31,7 @@ const HomeU = () => {
   useEffect(() => {
     const fetchNotificaciones = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/notificaciones/${departamento}`);
+        const response = await axios.get(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${departamento}`);
         const filteredNotificaciones = response.data.filter(notif => notif.departamento === departamento);
         setNotificaciones(filteredNotificaciones);
 
@@ -44,17 +44,16 @@ const HomeU = () => {
 
     fetchNotificaciones();
     
-    // Intervalo para actualizar las notificaciones cada 5 segundos
-    const interval = setInterval(fetchNotificaciones, 3000); // 5 segundos
+    // Intervalo para actualizar las notificaciones cada 3 segundos
+    const interval = setInterval(fetchNotificaciones, 3000);
 
-    // Limpiar el intervalo cuando el componente se desmonte
     return () => clearInterval(interval);
   }, [departamento]);
 
   // Marcar notificación como leída y redirigir
   const marcarComoLeidaYRedirigir = async (id, ruta) => {
     try {
-      await axios.put(`http://localhost:5000/api/notificaciones/${id}/leida`);
+      await axios.put(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}/leida`);
       setNotificaciones(prev => prev.map(noti => (noti._id === id ? { ...noti, leida: true } : noti)));
       setContador(prev => Math.max(prev - 1, 0));
       navigate(ruta);
@@ -66,7 +65,7 @@ const HomeU = () => {
   // Eliminar notificación manualmente
   const eliminarNotificacion = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/notificaciones/${id}`);
+      await axios.delete(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}`);
       setNotificaciones(prev => prev.filter(noti => noti._id !== id));
     } catch (err) {
       console.error('Error al eliminar la notificación:', err);

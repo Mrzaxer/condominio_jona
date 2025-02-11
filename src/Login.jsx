@@ -12,7 +12,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', { phone, password });
+      const response = await axios.post('https://api-mongo-5hdo.onrender.com/api/users/login', { phone, password });
 
       // Extraer los datos de la respuesta
       const { role, departamento } = response.data;
@@ -69,6 +69,9 @@ const Login = () => {
         </div>
 
         <button onClick={handleLogin}>Iniciar Sesión</button>
+        <button onClick={() => navigate('/register')} className="register-button">
+          Registrarse
+        </button>
       </div>
     </div>
   );
