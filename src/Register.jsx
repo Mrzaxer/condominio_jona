@@ -13,7 +13,7 @@ const Register = () => {
     direccion: ''
   });
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Para redirigir después del registro (opcional)
+  const navigate = useNavigate(); // Para redirigir después del registro
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,19 +22,30 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación del campo role
     if (formData.role !== 'admin' && formData.role !== 'inquilino') {
       return setMessage('Por favor selecciona un rol válido (Administrador o Inquilino)');
     }
 
     try {
       const response = await axios.post('https://api-mongo-5hdo.onrender.com/api/users/register', formData);
-      setMessage(response.data.message || 'Usuario registrado exitosamente');
       
-      // Opcional: redirigir al login o página principal después del registro
-      if (response.status === 201) {
-        navigate('/');
+      // Extraer el token y los datos del usuario
+      const { token, role, direccion } = response.data;
+
+      // Guardar manualmente el token y datos en localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('userRole', role);
+      localStorage.setItem('departamento', direccion); // Dirección equivale a departamento
+
+      setMessage('Usuario registrado exitosamente');
+      
+      // Redirigir a la página correspondiente
+      if (role === 'admin') {
+        navigate('/Home');  
+      } else if (role === 'inquilino') {
+        navigate('/HomeU'); 
       }
+
     } catch (error) {
       if (error.response) {
         setMessage(error.response.data.message || 'Error en el registro');
@@ -81,7 +92,6 @@ const Register = () => {
           required
         />
         
-        {/* Campo select para elegir el rol */}
         <select
           name="role"
           onChange={handleChange}

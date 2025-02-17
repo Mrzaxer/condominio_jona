@@ -4,23 +4,36 @@ import axios from 'axios';
 import './Multas.css';
 
 const Multas = () => {
-  const [multas, setMultas] = useState([]); // Estado para almacenar las multas
-  const [error, setError] = useState('');  // Estado para manejar errores
+  const [multas, setMultas] = useState([]);  
+  const [error, setError] = useState('');  
+  const [loading, setLoading] = useState(true);  
 
-  // Función para obtener las multas desde la API
   useEffect(() => {
     const fetchMultas = async () => {
       try {
-        const response = await axios.get('https://api-mongo-5hdo.onrender.com/api/multas/si'); // Cambia esta URL según tu backend
-        setMultas(response.data); // Almacena las multas en el estado
+        const token = localStorage.getItem('token'); // Obtener token de autenticación
+
+        if (!token) {
+          throw new Error('No tienes permisos para ver las multas.');
+        }
+
+        const response = await axios.get('https://api-mongo-5hdo.onrender.com/api/multas/si', {
+          headers: {
+            Authorization: `Bearer ${token}`  // Enviar token en el header
+          }
+        });
+
+        setMultas(response.data);
       } catch (err) {
         console.error('Error al obtener las multas:', err);
-        setError('Ocurrió un error al cargar las multas. Intenta nuevamente.');
+        setError(err.response?.data?.message || 'Ocurrió un error al cargar las multas.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchMultas();
-  }, []); // Se ejecuta solo una vez al montar el componente
+  }, []);  
 
   return (
     <div className="multas-container">
@@ -38,33 +51,46 @@ const Multas = () => {
           <Link to="/">Cerrar Sesión</Link>
         </nav>
       </header>
+
       <h2>Multas</h2>
-      <table className="multas-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Motivo</th>
-            <th>Monto</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {multas.length > 0 ? (
-            multas.map((multa) => (
-              <tr key={multa.id}>
-                <td>{multa.id}</td>
-                <td>{multa.motivo}</td>
-                <td>{multa.monto}</td>
-                <td>{multa.estado}</td>
-              </tr>
-            ))
-          ) : (
+
+      {/* Mostrar mensaje de carga */}
+      {loading && <p className="loading-message">Cargando multas...</p>}
+
+      {/* Mostrar mensaje de error */}
+      {error && <p className="error-message">{error}</p>}
+
+      {/* Tabla de multas */}
+      {!loading && !error && (
+        <table className="multas-table">
+          <thead>
             <tr>
-              <td colSpan="4">No hay multas registradas.</td>
+              <th>ID</th>
+              <th>Motivo</th>
+              <th>Monto</th>
+              <th>Estado</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {multas.length > 0 ? (
+              multas.map((multa) => (
+                <tr key={multa.id}>
+                  <td>{multa.id}</td>
+                  <td>{multa.motivo}</td>
+                  <td>{multa.monto}</td>
+                  <td>{multa.estado}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">No hay multas registradas.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      )}
+
+      {/* Botón para agregar nueva multa */}
       <div className="button-container">
         <Link to="/addmulta">
           <button className="add-multa-button">Agregar Nueva Multa</button>

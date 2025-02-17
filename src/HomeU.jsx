@@ -12,15 +12,31 @@ const HomeU = () => {
   const navigate = useNavigate();
 
   const departamento = localStorage.getItem('departamento');
+  const token = localStorage.getItem('token'); // Obtiene el token de localStorage
+
+  // Configuración de axios con el token
+  const axiosConfig = {
+    headers: {
+      Authorization: `Bearer ${token}`, // Agrega el token en la cabecera
+    },
+  };
 
   // Obtener notificaciones
   const fetchNotificaciones = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/notificaciones/${departamento}`);
-      const filteredNotificaciones = response.data.filter(notif => notif.departamento === departamento);
+      const response = await axios.get(
+        `https://api-mongo-5hdo.onrender.com/api/notificaciones/${departamento}`,
+        axiosConfig // Se pasa la configuración con el token
+      );
+
+      const filteredNotificaciones = response.data.filter(
+        (notif) => notif.departamento === departamento
+      );
       setNotificaciones(filteredNotificaciones);
 
-      const notificacionesNoLeidas = filteredNotificaciones.filter(noti => !noti.leida);
+      const notificacionesNoLeidas = filteredNotificaciones.filter(
+        (noti) => !noti.leida
+      );
       setContador(notificacionesNoLeidas.length);
     } catch (err) {
       console.error('Error al obtener notificaciones:', err);
@@ -28,26 +44,29 @@ const HomeU = () => {
   };
 
   useEffect(() => {
-    fetchNotificaciones(); // Cargar las notificaciones al inicio
+    fetchNotificaciones();
 
-    // Configurar el intervalo para actualizar las notificaciones cada 3 segundos
     const intervalId = setInterval(() => {
       fetchNotificaciones();
-    }, 3000); // 3 segundos
+    }, 3000);
 
-    // Limpiar el intervalo al desmontar el componente
     return () => clearInterval(intervalId);
   }, [departamento]);
 
   // Marcar como leída y redirigir
   const manejarClickNotificacion = async (id, ruta) => {
     try {
-      await axios.put(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}/leida`);
-      setNotificaciones(prev =>
-        prev.map(noti => (noti._id === id ? { ...noti, leida: true } : noti))
+      await axios.put(
+        `https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}/leida`,
+        {},
+        axiosConfig // Se pasa el token
       );
-      setContador(prev => Math.max(prev - 1, 0));
-      navigate(ruta); // Redirige a la ruta deseada
+
+      setNotificaciones((prev) =>
+        prev.map((noti) => (noti._id === id ? { ...noti, leida: true } : noti))
+      );
+      setContador((prev) => Math.max(prev - 1, 0));
+      navigate(ruta);
     } catch (err) {
       console.error('Error al marcar como leída:', err);
     }
@@ -56,15 +75,18 @@ const HomeU = () => {
   // Eliminar notificación
   const eliminarNotificacion = async (id) => {
     try {
-      await axios.delete(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}`);
-      setNotificaciones(prev => prev.filter(noti => noti._id !== id));
-      setContador(prev => Math.max(prev - 1, 0));
+      await axios.delete(
+        `https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}`,
+        axiosConfig // Se pasa el token
+      );
+
+      setNotificaciones((prev) => prev.filter((noti) => noti._id !== id));
+      setContador((prev) => Math.max(prev - 1, 0));
     } catch (err) {
       console.error('Error al eliminar la notificación:', err);
     }
   };
 
-  // Alternar menú de notificaciones
   const toggleDropdown = () => {
     setAbierto(!abierto);
   };
@@ -94,12 +116,8 @@ const HomeU = () => {
         <h4>Notificaciones</h4>
         {notificaciones.length > 0 ? (
           <TransitionGroup component="ul" className="notification-list">
-            {notificaciones.map(noti => (
-              <CSSTransition
-                key={noti._id}
-                timeout={500}
-                classNames="notification"
-              >
+            {notificaciones.map((noti) => (
+              <CSSTransition key={noti._id} timeout={500} classNames="notification">
                 <li className={noti.leida ? 'leida' : 'nueva'}>
                   <span onClick={() => manejarClickNotificacion(noti._id, '/multasu')}>
                     {noti.mensaje}

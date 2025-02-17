@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaBell } from 'react-icons/fa';
-import { CSSTransition, TransitionGroup } from 'react-transition-group'; // Importamos react-transition-group
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './Multas.css';
 
 const HomeU = () => {
@@ -10,41 +10,55 @@ const HomeU = () => {
   const [notificaciones, setNotificaciones] = useState([]);
   const [contador, setContador] = useState(0);
   const [abierto, setAbierto] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const departamento = localStorage.getItem('departamento');
 
-  // Obtener multas
+  // Obtener multas del usuario
   useEffect(() => {
     const fetchMultas = async () => {
       try {
-        const response = await axios.get('https://api-mongo-5hdo.onrender.com/api/multas/si');
-        const filteredMultas = response.data.filter(multa => multa.direccion.includes(departamento));
+        const token = localStorage.getItem('token');
+        if (!token || !departamento) {
+          setError('No tienes permisos o no se encontró un departamento válido.');
+          return;
+        }
+
+        const response = await axios.get('https://api-mongo-5hdo.onrender.com/api/multas/si', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const filteredMultas = response.data.filter(multa => multa.direccion.startsWith(departamento));
         setMultas(filteredMultas);
       } catch (err) {
         console.error('Error al obtener multas:', err);
+        setError('Ocurrió un error al cargar las multas.');
       }
     };
+
     fetchMultas();
   }, [departamento]);
 
-  // Obtener notificaciones con actualización automática
+  // Obtener notificaciones y actualizar cada 3 segundos
   useEffect(() => {
     const fetchNotificaciones = async () => {
       try {
-        const response = await axios.get(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${departamento}`);
-        const filteredNotificaciones = response.data.filter(notif => notif.departamento === departamento);
-        setNotificaciones(filteredNotificaciones);
+        const token = localStorage.getItem('token');
+        if (!token || !departamento) return;
 
-        const notificacionesNoLeidas = filteredNotificaciones.filter(noti => !noti.leida);
-        setContador(notificacionesNoLeidas.length);
+        const response = await axios.get(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${departamento}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const filteredNotificaciones = response.data.filter(noti => noti.departamento === departamento);
+        setNotificaciones(prevNotificaciones => [...filteredNotificaciones]);
+        setContador(filteredNotificaciones.filter(noti => !noti.leida).length);
       } catch (err) {
         console.error('Error al obtener notificaciones:', err);
       }
     };
 
     fetchNotificaciones();
-    
-    // Intervalo para actualizar las notificaciones cada 3 segundos
     const interval = setInterval(fetchNotificaciones, 3000);
 
     return () => clearInterval(interval);
@@ -53,8 +67,16 @@ const HomeU = () => {
   // Marcar notificación como leída y redirigir
   const marcarComoLeidaYRedirigir = async (id, ruta) => {
     try {
-      await axios.put(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}/leida`);
-      setNotificaciones(prev => prev.map(noti => (noti._id === id ? { ...noti, leida: true } : noti)));
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      await axios.put(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}/leida`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setNotificaciones(prev =>
+        prev.map(noti => (noti._id === id ? { ...noti, leida: true } : noti))
+      );
       setContador(prev => Math.max(prev - 1, 0));
       navigate(ruta);
     } catch (err) {
@@ -65,7 +87,13 @@ const HomeU = () => {
   // Eliminar notificación manualmente
   const eliminarNotificacion = async (id) => {
     try {
-      await axios.delete(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}`);
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      await axios.delete(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setNotificaciones(prev => prev.filter(noti => noti._id !== id));
     } catch (err) {
       console.error('Error al eliminar la notificación:', err);
@@ -96,25 +124,19 @@ const HomeU = () => {
         </nav>
       </header>
 
-      {/* Menú de notificaciones deslizante */}
+      {/* Menú de notificaciones */}
       <div className={`notification-menu ${abierto ? 'open' : ''}`}>
         <div className="close-btn" onClick={toggleDropdown}>X</div>
         <h4>Notificaciones</h4>
         {notificaciones.length > 0 ? (
           <TransitionGroup component="ul" className="notification-list">
             {notificaciones.map(noti => (
-              <CSSTransition
-                key={noti._id}
-                timeout={500}
-                classNames="notification"
-              >
+              <CSSTransition key={noti._id} timeout={500} classNames="notification">
                 <li className={noti.leida ? 'leida' : 'nueva'}>
                   <span onClick={() => marcarComoLeidaYRedirigir(noti._id, noti.ruta)}>
                     {noti.mensaje}
                   </span>
-                  <button className="delete-btn" onClick={() => eliminarNotificacion(noti._id)}>
-                    X
-                  </button>
+                  <button className="delete-btn" onClick={() => eliminarNotificacion(noti._id)}>X</button>
                 </li>
               </CSSTransition>
             ))}
@@ -126,6 +148,9 @@ const HomeU = () => {
 
       <main className="main-content">
         <h2>Mis Multas</h2>
+
+        {error && <p className="error-message">{error}</p>}
+
         <table className="multas-table">
           <thead>
             <tr>

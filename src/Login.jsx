@@ -15,17 +15,18 @@ const Login = () => {
       const response = await axios.post('https://api-mongo-5hdo.onrender.com/api/users/login', { phone, password });
 
       // Extraer los datos de la respuesta
-      const { role, departamento } = response.data;
+      const { token, role, direccion } = response.data;
 
-      // Guardar en localStorage
+      // Guardar manualmente el token y los datos en localStorage
+      localStorage.setItem('token', token);  
       localStorage.setItem('userRole', role);
-      localStorage.setItem('departamento', departamento);
+      localStorage.setItem('departamento', direccion);
 
       // Redirigir según el rol
       if (role === 'admin') {
-        navigate('/Home');  // Página para administradores
+        navigate('/Home');  
       } else if (role === 'inquilino') {
-        navigate('/HomeU'); // Página para inquilinos
+        navigate('/HomeU'); 
       } else {
         setError('Rol no reconocido');
       }

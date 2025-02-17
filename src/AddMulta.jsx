@@ -6,16 +6,16 @@ import './AddMulta.css';
 
 const AddMulta = () => {
   const [form, setForm] = useState({
-    direccion: '',  // Dirección del inquilino
+    direccion: '',  
     motivo: '',
     monto: '',
-    estado: 'pendiente' // Estado por defecto 'pendiente'
+    estado: 'pendiente' 
   });
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);  // Nuevo estado de carga
-  const [showModal, setShowModal] = useState(false);  // Controlar la visibilidad del modal
+  const [loading, setLoading] = useState(false);  
+  const [showModal, setShowModal] = useState(false);  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,14 +26,26 @@ const AddMulta = () => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    setLoading(true);  // Iniciar carga
+    setLoading(true);  
 
     try {
-      const response = await axios.post('https://api-mongo-5hdo.onrender.com/api/multas/no', form);
-      setSuccess('Multa creada exitosamente. Notificación enviada.');
-      setShowModal(true);  // Mostrar el modal de éxito
+      // Obtener token de localStorage
+      const token = localStorage.getItem('token');
 
-      // Limpiar el formulario después de crear la multa
+      if (!token) {
+        throw new Error('No tienes permisos para realizar esta acción.');
+      }
+
+      // Enviar petición con encabezado Authorization
+      const response = await axios.post('https://api-mongo-5hdo.onrender.com/api/multas/no', form, {
+        headers: {
+          Authorization: `Bearer ${token}`  // Enviar el token en la petición
+        }
+      });
+
+      setSuccess('Multa creada exitosamente. Notificación enviada.');
+      setShowModal(true);  
+
       setForm({
         direccion: '',
         motivo: '',
@@ -45,7 +57,7 @@ const AddMulta = () => {
       const message = err.response?.data?.message || 'Ocurrió un error al crear la multa. Intenta nuevamente.';
       setError(message);
     } finally {
-      setLoading(false);  // Terminar carga
+      setLoading(false);  
     }
   };
 
@@ -113,25 +125,13 @@ const AddMulta = () => {
               Cancelar
             </button>
 
-            {/* Transición de "Cargando" */}
-            <CSSTransition
-              in={loading}
-              timeout={300}
-              classNames="loading"
-              unmountOnExit
-            >
+            <CSSTransition in={loading} timeout={300} classNames="loading" unmountOnExit>
               <button type="button" className="create-button" disabled>
                 Cargando...
               </button>
             </CSSTransition>
 
-            {/* Botón de crear multa */}
-            <CSSTransition
-              in={!loading}
-              timeout={300}
-              classNames="loading"
-              unmountOnExit
-            >
+            <CSSTransition in={!loading} timeout={300} classNames="loading" unmountOnExit>
               <button type="submit" className="create-button">
                 Crear Multa
               </button>
@@ -139,18 +139,11 @@ const AddMulta = () => {
           </div>
         </form>
 
-        {/* Mensajes de éxito o error */}
         {success && <p className="success-message">{success}</p>}
         {error && <p className="error-message">{error}</p>}
       </div>
 
-      {/* Modal de éxito */}
-      <CSSTransition
-        in={showModal}
-        timeout={300}
-        classNames="modal"
-        unmountOnExit
-      >
+      <CSSTransition in={showModal} timeout={300} classNames="modal" unmountOnExit>
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content">
             <h2>Éxito</h2>
