@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaCog } from 'react-icons/fa';
 import axios from 'axios';
 import './Multas.css';
 
 const Multas = () => {
-  const [multas, setMultas] = useState([]);  
-  const [error, setError] = useState('');  
-  const [loading, setLoading] = useState(true);  
+  const [multas, setMultas] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMultas = async () => {
       try {
-        const token = localStorage.getItem('token'); // Obtener token de autenticación
+        const token = localStorage.getItem('token');
 
         if (!token) {
           throw new Error('No tienes permisos para ver las multas.');
@@ -19,8 +20,8 @@ const Multas = () => {
 
         const response = await axios.get('https://api-mongo-5hdo.onrender.com/api/multas/si', {
           headers: {
-            Authorization: `Bearer ${token}`  // Enviar token en el header
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         setMultas(response.data);
@@ -33,7 +34,7 @@ const Multas = () => {
     };
 
     fetchMultas();
-  }, []);  
+  }, []);
 
   return (
     <div className="multas-container">
@@ -48,19 +49,18 @@ const Multas = () => {
           <Link to="/multas">Multas</Link>
           <Link to="/permisos">Permisos</Link>
           <Link to="/perfiles">Perfiles</Link>
-          <Link to="/">Cerrar Sesión</Link>
+          <Link to="/configuracion" className="configuracion-button">
+            <FaCog size={20} />
+          </Link>
         </nav>
       </header>
 
       <h2>Multas</h2>
 
-      {/* Mostrar mensaje de carga */}
       {loading && <p className="loading-message">Cargando multas...</p>}
 
-      {/* Mostrar mensaje de error */}
       {error && <p className="error-message">{error}</p>}
 
-      {/* Tabla de multas */}
       {!loading && !error && (
         <table className="multas-table">
           <thead>
@@ -90,7 +90,6 @@ const Multas = () => {
         </table>
       )}
 
-      {/* Botón para agregar nueva multa */}
       <div className="button-container">
         <Link to="/addmulta">
           <button className="add-multa-button">Agregar Nueva Multa</button>

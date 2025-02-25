@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaBell } from 'react-icons/fa';
+import { FaCog } from 'react-icons/fa'; 
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './Multas.css';
 
@@ -104,6 +105,16 @@ const HomeU = () => {
     setAbierto(!abierto);
   };
 
+  // 🔹 FUNCION PARA CERRAR SESIÓN
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('departamento');
+    delete axios.defaults.headers['Authorization'];
+    navigate('/'); // Redirigir al login
+  };
+
   return (
     <div className="multas-container">
       <header className="navbar">
@@ -120,7 +131,9 @@ const HomeU = () => {
           <Link to="/pagosu">Mis Pagos</Link>
           <Link to="/multasu">Mis Multas</Link>
           <Link to="/permisosu">Solicitar Permisos</Link>
-          <Link to="/">Cerrar Sesión</Link>
+          <Link to="/configuracion" className="configuracion-button">
+            <FaCog size={20} />
+          </Link> {/* El botón de configuración */}
         </nav>
       </header>
 

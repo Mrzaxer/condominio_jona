@@ -3,25 +3,32 @@
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
-  font-size: 18px;
+  font-size: 16px;
   text-align: left;
 }
 
 .multas-table thead tr {
-  background-color: #3d3d3d;
+  background-color: #2c3e50; /* Cambié a un color más oscuro */
   color: #ffffff;
-  text-align: left;
   font-weight: bold;
 }
 
 .multas-table th,
 .multas-table td {
-  padding: 12px 15px;
-  border: 1px solid #000000;
+  padding: 12px 20px;  /* Aumenté el padding para mayor espaciado */
+  border: 1px solid #bdc3c7; /* Borde más suave para un mejor contraste */
+}
+
+.multas-table tbody tr:hover {
+  background-color: #ecf0f1; /* Color de fondo cuando se pasa el mouse por encima */
 }
 
 .multas-table tbody tr {
-  border-bottom: 1px solid #2a2727;
+  border-bottom: 1px solid #bdc3c7;  /* Color más suave */
+}
+
+.multas-table td {
+  text-align: center;  /* Centré el texto dentro de las celdas */
 }
 
 /* Estilos para la campana de notificaciones */
@@ -51,9 +58,9 @@
   right: -100%; /* Empieza completamente fuera de la pantalla */
   width: 300px;
   height: 100%;
-  background-color: #2c3e50;
+  background-color: #34495e; /* Color de fondo mejorado */
   color: white;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
   transition: right 0.3s ease; /* Transición suave para el deslizamiento */
   padding: 20px;
   z-index: 1000;
@@ -65,7 +72,7 @@
 
 .notification-menu h4 {
   margin-top: 0;
-  font-size: 16px;
+  font-size: 18px; /* Aumenté el tamaño de fuente para mejorar la legibilidad */
 }
 
 .notification-list {
@@ -75,7 +82,7 @@
 }
 
 .notification-list li {
-  background-color: #34495e;
+  background-color: #000000; /* Nuevo color para las notificaciones */
   color: white;
   margin-bottom: 10px;
   padding: 15px;
@@ -128,3 +135,33 @@
   transition: opacity 500ms, transform 500ms;
 }
   
+.logout-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 10px 15px;
+  display: inline-block;
+  margin-left: 10px;  /* Añadí espacio para no estar pegado a otros elementos */
+}
+
+.logout-button:hover {
+  text-decoration: underline;
+}
+
+/* Estilo para el nuevo botón de configuración */
+.configuracion-button {
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 15px;
+  text-decoration: none;
+}
+
+.configuracion-button:hover {
+  text-decoration: underline;
+  color: #70707096;  /* Color dorado para el hover */
+}

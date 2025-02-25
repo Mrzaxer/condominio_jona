@@ -9,7 +9,7 @@ const Notificaciones = ({ departamento, setContador }) => {
   useEffect(() => {
     const fetchNotificaciones = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/notificaciones/${departamento}`);
+        const response = await axios.get(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${departamento}`);
         setNotificaciones(response.data);
         // Actualizar el contador de notificaciones no leídas
         const notificacionesNoLeidas = response.data.filter((noti) => !noti.leida);
@@ -25,7 +25,7 @@ const Notificaciones = ({ departamento, setContador }) => {
 
   const marcarComoLeida = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/notificaciones/${id}/leida`);
+      await axios.put(`https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}/leida`);
       setNotificaciones((prev) =>
         prev.map((noti) => (noti._id === id ? { ...noti, leida: true } : noti))
       );

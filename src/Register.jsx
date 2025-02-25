@@ -29,21 +29,14 @@ const Register = () => {
     try {
       const response = await axios.post('https://api-mongo-5hdo.onrender.com/api/users/register', formData);
       
-      // Extraer el token y los datos del usuario
-      const { token, role, direccion } = response.data;
-
-      // Guardar manualmente el token y datos en localStorage
-      localStorage.setItem('token', token);
-      localStorage.setItem('userRole', role);
-      localStorage.setItem('departamento', direccion); // Dirección equivale a departamento
-
+      // Guardar mensaje de éxito
       setMessage('Usuario registrado exitosamente');
-      
-      // Redirigir a la página correspondiente
-      if (role === 'admin') {
-        navigate('/Home');  
-      } else if (role === 'inquilino') {
-        navigate('/HomeU'); 
+
+      // Redirigir a la página correspondiente según el rol
+      if (formData.role === 'admin') {
+        navigate('/');  
+      } else if (formData.role === 'inquilino') {
+        navigate('/'); 
       }
 
     } catch (error) {
