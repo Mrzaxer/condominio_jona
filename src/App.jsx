@@ -30,21 +30,21 @@ function App() {
       <Routes>
         {/* Rutas de Autenticación */}
         <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/Register" element={<Register />} />
         <Route path="/Restablecer" element={<Restablecer />} />
 
         {/* Rutas del Administrador */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/multas" element={<Multas />} />
-        <Route path="/addmulta" element={<AddMulta />} />
+        <Route path="/Home" element={<Home />} />
+        <Route path="/Multas" element={<Multas />} />
+        <Route path="/Addmulta" element={<AddMulta />} />
 
         {/* Rutas del Usuario */}
-        <Route path="/homeu" element={<HomeU />} />
-        <Route path="/multasu" element={<MultasU />} />
+        <Route path="/Homeu" element={<HomeU />} />
+        <Route path="/Multasu" element={<MultasU />} />
 
         {/* Configuración y Notificaciones */}
-        <Route path="/notificaciones" element={<Notificaciones />} />
-        <Route path="/configuracion" element={<Configuracion />} />
+        <Route path="/Notificaciones" element={<Notificaciones />} />
+        <Route path="/Configuracion" element={<Configuracion />} />
       </Routes>
     </Router>
   );
