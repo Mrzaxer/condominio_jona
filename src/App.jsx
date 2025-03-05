@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
-import Recuperar from './Recuperar';
+import Restablecer from './Restablecer';
 import Home from './Home';
 import HomeU from './HomeU';
 
@@ -13,7 +13,7 @@ import AddMulta from './AddMulta';
 // import PagosU from './PagosU';
 // import AddPago from './AddPago';
 
-// import Permisos from './Permisos';
+// import Permisos from './Permisos'; 
 // import AddPermiso from './AddPermiso';
 
 // import Perfiles from './Perfiles';
@@ -31,7 +31,7 @@ function App() {
         {/* Rutas de Autenticación */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/Recuperar" element={<Recuperar />} />
+        <Route path="/Restablecer" element={<Restablecer />} />
 
         {/* Rutas del Administrador */}
         <Route path="/home" element={<Home />} />

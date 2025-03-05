@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Recuperar.css';
 
-const Recuperar = () => {
+const Restablecer = () => {
   const navigate = useNavigate();
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
@@ -47,5 +47,4 @@ const Recuperar = () => {
   );
 };
 
-export default Recuperar;
-
+export default Restablecer;
