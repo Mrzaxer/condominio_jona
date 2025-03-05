@@ -120,9 +120,8 @@ const Login = () => {
           Registrarse
         </button>
 
-        {/* ✅ Botón para recuperar contraseña */}
         <button 
-          onClick={() => navigate('/recuperar')} 
+          onClick={() => navigate('/restablecer')} 
           className="forgot-password-button"
         >
           ¿Olvidaste tu contraseña?
