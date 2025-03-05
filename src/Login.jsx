@@ -9,7 +9,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  // 🔹 Intenta renovar el token al cargar la página
   useEffect(() => {
     const checkSession = async () => {
       const token = localStorage.getItem('token');
@@ -22,7 +21,6 @@ const Login = () => {
     checkSession();
   }, []);
 
-  // 🔹 Función para manejar el inicio de sesión
   const handleLogin = async () => {
     try {
       const response = await axios.post(
@@ -33,16 +31,13 @@ const Login = () => {
 
       const { accessToken, refreshToken, role, direccion } = response.data;
 
-      // Guardamos los tokens en localStorage
       localStorage.setItem('token', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('userRole', role);
       localStorage.setItem('departamento', direccion);
 
-      // Actualizamos el encabezado Authorization para futuras solicitudes
       axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
-      // Redirigir según el rol del usuario
       if (role === 'admin') {
         navigate('/Home');
       } else if (role === 'inquilino') {
@@ -55,7 +50,6 @@ const Login = () => {
     }
   };
 
-  // 🔹 Función para renovar el token si expira
   const refreshAccessToken = async () => {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
@@ -70,7 +64,6 @@ const Login = () => {
       const { accessToken } = response.data;
       localStorage.setItem('token', accessToken);
 
-      // Actualizamos el encabezado Authorization para futuras solicitudes
       axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
       console.log('Token renovado exitosamente');
@@ -80,7 +73,6 @@ const Login = () => {
     }
   };
 
-  // 🔹 Cerrar sesión eliminando los tokens y redirigiendo
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
@@ -126,6 +118,14 @@ const Login = () => {
         <button onClick={handleLogin}>Iniciar Sesión</button>
         <button onClick={() => navigate('/register')} className="register-button">
           Registrarse
+        </button>
+
+        {/* ✅ Botón para recuperar contraseña */}
+        <button 
+          onClick={() => navigate('/recuperar')} 
+          className="forgot-password-button"
+        >
+          ¿Olvidaste tu contraseña?
         </button>
       </div>
     </div>
