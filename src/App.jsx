@@ -20,7 +20,7 @@ import AddMulta from './AddMulta';
 // import AddPerfil from './AddPerfil';
 
 import Notificaciones from './Notificaciones';
-import Configuracion from './Configuracion';
+import Configuracion from './configuracion';
 
 import './App.css';
 
