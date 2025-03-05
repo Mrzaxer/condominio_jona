@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
-import Recuperar from './recuperar';
+import Recuperar from './Recuperar';
 import Home from './Home';
 import HomeU from './HomeU';
 
@@ -31,7 +31,7 @@ function App() {
         {/* Rutas de Autenticación */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/recuperar" element={<Recuperar />} />
+        <Route path="/Recuperar" element={<Recuperar />} />
 
         {/* Rutas del Administrador */}
         <Route path="/home" element={<Home />} />
