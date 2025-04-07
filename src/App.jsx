@@ -4,20 +4,11 @@ import Register from './Register';
 import Restablecer from './Restablecer';
 import Home from './Home';
 import HomeU from './HomeU';
-
 import Multas from './Multas';
 import MultasU from './MultasU';
 import AddMulta from './AddMulta';
-
-// import Pagos from './Pagos';
-// import PagosU from './PagosU';
-// import AddPago from './AddPago';
-
-// import Permisos from './Permisos'; 
-// import AddPermiso from './AddPermiso';
-
-// import Perfiles from './Perfiles';
-// import AddPerfil from './AddPerfil';
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 
 import Notificaciones from './Notificaciones';
 import Configuracion from './configuracion';
@@ -45,6 +36,11 @@ function App() {
         {/* Configuración y Notificaciones */}
         <Route path="/Notificaciones" element={<Notificaciones />} />
         <Route path="/Configuracion" element={<Configuracion />} />
+
+        {/* Restablecimiento de contraseña */}
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
+        <Route path="/resetpassword/:token" element={<ResetPassword />} />
+        
       </Routes>
     </Router>
   );

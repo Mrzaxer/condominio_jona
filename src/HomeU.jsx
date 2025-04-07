@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaBell } from 'react-icons/fa';
+import { FaBell, FaCog } from 'react-icons/fa';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './Home.css';
 
@@ -9,24 +9,61 @@ const HomeU = () => {
   const [notificaciones, setNotificaciones] = useState([]);
   const [contador, setContador] = useState(0);
   const [abierto, setAbierto] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const departamento = localStorage.getItem('departamento');
-  const token = localStorage.getItem('token'); // Obtiene el token de localStorage
+  // Verificación de autenticación
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const token = localStorage.getItem('token');
+      const role = localStorage.getItem('userRole');
+      
+      if (!token) {
+        navigate('/');
+        return;
+      }
+
+      try {
+        await axios.get('https://api-mongo-5hdo.onrender.com/api/users/verify', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (role !== 'inquilino') {
+          navigate('/home');
+          return;
+        }
+
+        setIsAuthenticated(true);
+        fetchNotificaciones(); // Solo cargar notificaciones si está autenticado
+      } catch (error) {
+        localStorage.clear();
+        navigate('/');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    verifyAuth();
+  }, [navigate]);
 
   // Configuración de axios con el token
-  const axiosConfig = {
-    headers: {
-      Authorization: `Bearer ${token}`, // Agrega el token en la cabecera
-    },
+  const getAxiosConfig = () => {
+    const token = localStorage.getItem('token');
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
   };
 
   // Obtener notificaciones
   const fetchNotificaciones = async () => {
     try {
+      const departamento = localStorage.getItem('departamento');
       const response = await axios.get(
         `https://api-mongo-5hdo.onrender.com/api/notificaciones/${departamento}`,
-        axiosConfig // Se pasa la configuración con el token
+        getAxiosConfig()
       );
 
       const filteredNotificaciones = response.data.filter(
@@ -43,23 +80,13 @@ const HomeU = () => {
     }
   };
 
-  useEffect(() => {
-    fetchNotificaciones();
-
-    const intervalId = setInterval(() => {
-      fetchNotificaciones();
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-  }, [departamento]);
-
   // Marcar como leída y redirigir
   const manejarClickNotificacion = async (id, ruta) => {
     try {
       await axios.put(
         `https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}/leida`,
         {},
-        axiosConfig // Se pasa el token
+        getAxiosConfig()
       );
 
       setNotificaciones((prev) =>
@@ -77,7 +104,7 @@ const HomeU = () => {
     try {
       await axios.delete(
         `https://api-mongo-5hdo.onrender.com/api/notificaciones/${id}`,
-        axiosConfig // Se pasa el token
+        getAxiosConfig()
       );
 
       setNotificaciones((prev) => prev.filter((noti) => noti._id !== id));
@@ -90,6 +117,18 @@ const HomeU = () => {
   const toggleDropdown = () => {
     setAbierto(!abierto);
   };
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <p>Verificando autenticación...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="home-container">
@@ -106,7 +145,9 @@ const HomeU = () => {
           <Link to="/pagosu">Mis Pagos</Link>
           <Link to="/multasu">Mis Multas</Link>
           <Link to="/permisosu">Solicitar Permisos</Link>
-          <Link to="/">Cerrar Sesión</Link>
+          <Link to="/configuracion" className="configuracion-button">
+            <FaCog size={20} />
+          </Link>
         </nav>
       </header>
 
